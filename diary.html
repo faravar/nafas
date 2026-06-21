@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>دفترچه خاطرات جادویی من 🦄</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.rtl.min.css" rel="stylesheet">
+
+    <style>
+        /* تعریف فونت ایران‌سنس */
+        @font-face {
+            font-family: 'IRANSans';
+            src: url('IRANSans.woff2') format('woff2'),
+                 url('IRANSans.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* اعمال فونت ایران‌سنس به کل عناصر سایت */
+        body, input, textarea, button, select, option {
+            font-family: 'IRANSans', Tahoma, sans-serif !important;
+            color: #4a4a4a;
+        }
+
+        body {
+            background: linear-gradient(135deg, #ffe5ec 0%, #f0e6ff 100%);
+            min-height: 100vh;
+        }
+
+        .pastel-card {
+            background-color: rgba(255, 255, 255, 0.92);
+            border: 3px solid #ffb3c6;
+            border-radius: 25px;
+            box-shadow: 0 10px 25px rgba(255, 179, 198, 0.35);
+            backdrop-filter: blur(5px);
+        }
+
+        .pastel-btn-pink {
+            background-color: #ffb3c6;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .pastel-btn-pink:hover:not(:disabled) {
+            background-color: #ff85a1;
+            color: #fff;
+            transform: scale(1.03);
+        }
+
+        .pastel-btn-purple {
+            background-color: #c8b6ff;
+            color: #fff;
+            border: none;
+            border-radius: 20px;
+            padding: 12px 25px;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+
+        .pastel-btn-purple:hover:not(:disabled) {
+            background-color: #b8c0ff;
+            color: #fff;
+            transform: scale(1.03);
+        }
+
+        .form-control {
+            border: 2px solid #e2ece9;
+            border-radius: 15px;
+            padding: 12px;
+        }
+
+        .form-control:focus {
+            border-color: #ffb3c6;
+            box-shadow: 0 0 0 0.25rem rgba(255, 179, 198, 0.25);
+        }
+
+        .fade-in {
+            animation: fadeIn 0.6s ease-in-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .diary-item {
+            background-color: #fffdf0;
+            border-right: 5px solid #ffd166;
+            border-radius: 15px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container d-flex justify-content-center align-items-center" style="min-height: 100vh;">
+        
+        <div id="lock-screen" class="card pastel-card p-4 text-center fade-in" style="max-width: 400px; width: 100%;">
+            <div class="fs-1 mb-2">🦄✨</div>
+            <h3 class="mb-4" style="color: #6c5ce7; font-weight: bold;">دفترچه خاطرات جادویی</h3>
+            <p class="text-muted small mb-4">برای باز کردن دفترچه، رمز جادویی رو وارد کن!</p>
+            
+            <div class="mb-3">
+                <input type="password" id="password-input" class="form-control text-center fs-4" placeholder="••••" maxlength="10">
+                <div id="error-msg" class="text-danger small mt-2 d-none">ای وای! رمز اشتباه بود، دوباره تلاش کن 🧚‍♀️</div>
+            </div>
+            
+            <button onclick="checkPassword()" id="login-btn" class="btn pastel-btn-pink w-100 mt-2">باز کردن با جادو 🔑</button>
+        </div>
+
+        <div id="main-content" class="card pastel-card p-4 fade-in d-none" style="max-width: 650px; width: 100%;">
+            <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+                <h4 class="m-0" style="color: #ff758f; font-weight: bold;">دفترچه من 📝🌸</h4>
+                <button onclick="lockDiary()" class="btn btn-sm btn-outline-secondary" style="border-radius: 15px;">قفل کردن 🔒</button>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label fw-bold">امروز چه اتفاقی افتاد؟ برام بنویس:</label>
+                <textarea id="diary-text" class="form-control mb-3" rows="4" placeholder="امروز روز خیلی قشنگی بود چون..."></textarea>
+                
+                <div class="mb-3">
+                    <label class="form-label d-block small text-muted">حس و حالت امروز چطوره؟</label>
+                    <select id="diary-mood" class="form-select" style="border-radius: 15px; border: 2px solid #e2ece9;">
+                        <option value="😊 عالی و خوشحال">😊 عالی و خوشحال</option>
+                        <option value="🥳 پرانرژی و هیجان‌زده">🥳 پرانرژی و هیجان‌زده</option>
+                        <option value="😴 یکم خسته">😴 یکم خسته</option>
+                        <option value="😢 یکم ناراحت">😢 یکم ناراحت</option>
+                    </select>
+                </div>
+
+                <button onclick="saveMemory()" id="submit-btn" class="btn pastel-btn-purple w-100">ثبت در حافظه دفترچه ✨</button>
+            </div>
+
+            <h5 class="mt-4 mb-3" style="color: #6c5ce7; font-weight: bold;">خاطرات همین الان:</h5>
+            <div id="memories-container" style="max-height: 220px; overflow-y: auto;">
+                <p id="no-memory-text" class="text-muted text-center small my-4">هنوز خاطره‌ای ننوشتی! اولین خاطره‌ات رو بالا یادداشت کن. ⭐️</p>
+            </div>
+        </div>
+
+    </div>
+
+    <script>
+        // لینک اختصاصی وب‌اپ گوگل شیت شما
+        const GOOGLE_SHEET_URL = "https://script.google.com/macros/s/AKfycbyDrOKoSQ6HRFTGuxefhe7CtCbdEgdNJdXeVVGAt3Cksr27EjFHxede4ggbJGU2JaNH/exec"; 
+  
+        // ذخیره موقت توکن رمز در حافظه صفحه برای امنیت بیشتر در ارسال خاطره
+        let userPasswordToken = ""; 
+
+        // تایید رمز عبور با فرمت استاندارد FormData
+        function checkPassword() {
+            const passwordInput = document.getElementById('password-input').value;
+            const errorMsg = document.getElementById('error-msg');
+            const loginBtn = document.getElementById('login-btn');
+
+            if (!passwordInput) return;
+
+            loginBtn.innerText = "در حال بررسی جادو... 🪄";
+            loginBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append("action", "check_password");
+            formData.append("password", passwordInput);
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === "success") {
+                    userPasswordToken = passwordInput; 
+                    errorMsg.classList.add('d-none');
+                    document.getElementById('lock-screen').classList.add('d-none');
+                    document.getElementById('main-content').classList.remove('d-none');
+                } else {
+                    errorMsg.classList.remove('d-none');
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("ارتباط با کلود برقرار نشد. وضعیت اتصال اینترنت رو چک کن! 🧚‍♀️");
+            })
+            .finally(() => {
+                loginBtn.innerText = "باز کردن با جادو 🔑";
+                loginBtn.disabled = false;
+                document.getElementById('password-input').value = '';
+            });
+        }
+
+        // قفل کردن مجدد و پاک کردن رمز از حافظه موقت مرورگر
+        function lockDiary() {
+            userPasswordToken = "";
+            document.getElementById('main-content').classList.add('d-none');
+            document.getElementById('lock-screen').classList.remove('d-none');
+        }
+
+        // ارسال خاطره به بک‌اند با ساختار FormData
+        function saveMemory() {
+            const textInput = document.getElementById('diary-text');
+            const moodInput = document.getElementById('diary-mood');
+            const container = document.getElementById('memories-container');
+            const noMemoryText = document.getElementById('no-memory-text');
+            const submitBtn = document.getElementById('submit-btn');
+
+            if (textInput.value.trim() === "") {
+                alert("لطفاً ابتدا خاطره‌ت رو بنویس! 💕");
+                return;
+            }
+
+            const today = new Date().toLocaleDateString('fa-IR');
+
+            submitBtn.innerText = "در حال فرستادن به صندوقچه جادویی... ✨";
+            submitBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append("action", "save_memory");
+            formData.append("password", userPasswordToken);
+            formData.append("date", today);
+            formData.append("mood", moodInput.value);
+            formData.append("text", textInput.value);
+
+            fetch(GOOGLE_SHEET_URL, {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                if(data.status === "success") {
+                    if (noMemoryText) noMemoryText.style.display = 'none';
+
+                    const memoryDiv = document.createElement('div');
+                    memoryDiv.className = 'diary-item fade-in';
+                    memoryDiv.innerHTML = `
+                        <div class="d-flex justify-content-between small text-muted mb-2">
+                            <span>📅 ${today}</span>
+                            <span>حس و حال: ${moodInput.value}</span>
+                        </div>
+                        <p class="m-0 text-dark" style="white-space: pre-wrap;">${textInput.value}</p>
+                    `;
+
+                    container.insertBefore(memoryDiv, container.firstChild);
+                    textInput.value = "";
+                } else {
+                    alert("خطایی رخ داد یا زمان دسترسی شما منقضی شده، لطفاً دوباره وارد شوید.");
+                    lockDiary();
+                }
+            })
+            .catch(err => {
+                console.error(err);
+                alert("ثبت خاطره ناموفق بود. مجدداً تلاش کنید.");
+            })
+            .finally(() => {
+                submitBtn.innerText = "ثبت در حافظه دفترچه ✨";
+                submitBtn.disabled = false;
+            });
+        }
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
