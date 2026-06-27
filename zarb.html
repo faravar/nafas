@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>دنیای جادویی جدول ضرب ✨</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Vazirmatn', sans-serif;
+            background: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #f7aef8 100%);
+            height: 100vh;
+            height: -webkit-fill-available;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        html {
+            height: 100vh;
+            height: -webkit-fill-available;
+        }
+        .full-mobile-app {
+            height: 100%;
+            width: 100%;
+            background: radial-gradient(circle, rgba(255,255,255,0.96) 35%, rgba(255, 229, 236, 0.7) 80%, rgba(247, 174, 248, 0.5) 100%);
+        }
+        
+        @media (min-width: 640px) {
+            .full-mobile-app {
+                height: 580px;
+                max-width: 400px;
+                border-radius: 1.5rem;
+                box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+                background: rgba(255, 255, 255, 0.88);
+            }
+        }
+        .glass-card {
+            
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+        .girl-btn {
+            background: linear-gradient(135deg, #ff85a2 0%, #ff477e 100%);
+            box-shadow: 0 4px 12px rgba(255, 71, 126, 0.2);
+            transition: all 0.2s ease;
+        }
+        .girl-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 15px rgba(255, 71, 126, 0.4);
+        }
+        .mode-btn {
+            background: linear-gradient(135deg, #b5179e 0%, #7209b7 100%);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center sm:p-4">
+
+    <div id="app" class="full-mobile-app glass-card p-6 text-center relative flex flex-col justify-between border-b border-pink-100 sm:border-2 sm:border-pink-200">
+        
+        <div id="name-screen" class="hidden space-y-6 my-auto animate__animated animate__fadeIn">
+            <div class="text-6xl">🌸✨</div>
+            <h2 class="text-2xl font-black text-[#ff477e]">خوش اومدی دختر باهوش!</h2>
+            <p class="text-gray-600 text-sm">لطفاً اسمت رو برام بنویس تا با هم آشنا بشیم:</p>
+            <input type="text" id="user-name-input" placeholder="اسم قشنگت..." class="w-full px-5 py-3 rounded-2xl border-2 border-pink-200 focus:border-pink-500 outline-none text-center font-bold text-lg text-gray-700 bg-white">
+            <button onclick="saveName()" class="girl-btn text-white font-bold py-3 px-8 rounded-full text-lg w-full">
+                ثبت و ورود 🦄
+            </button>
+        </div>
+
+        <div id="start-screen" class="hidden space-y-6 my-auto animate__animated animate__fadeIn">
+            <div class="text-6xl animate__animated animate__bounceInDown">🦄✨</div>
+            <h1 class="text-3xl font-extrabold text-[#ff477e] drop-shadow-sm">سلام <span id="welcome-name"></span>!</h1>
+            <p class="text-gray-600 text-sm">آماده‌ای هوش و سرعتت رو توی جدول ضرب به رخ بکشی؟ 🌸</p>
+            <button onclick="openModeModal()" class="girl-btn text-white font-bold py-4 px-8 rounded-full text-xl w-full mt-4">
+                شروع ماجراجویی 🚀
+            </button>
+            
+            <div id="high-score-box" class="bg-pink-50 rounded-2xl p-3 border border-pink-100 text-sm text-pink-700 hidden">
+                🏆 بالاترین امتیاز تو، <span class="player-name"></span> جان: <span id="high-score-val" class="font-bold">0</span> از 10
+            </div>
+        </div>
+
+        <div id="mode-modal" class="fixed inset-0 bg-black/40 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+            <div class="bg-white rounded-3xl p-6 w-full max-w-xs text-center space-y-4 animate__animated animate__zoomIn animate__faster shadow-2xl border-2 border-pink-100">
+                <h3 class="text-xl font-black text-purple-700">نوع بازی رو انتخاب کن 💫</h3>
+                <p class="text-xs text-gray-500"><span class="player-name"></span> جان، دوست داری چطوری جواب بدی؟</p>
+                <div class="space-y-3 pt-2">
+                    <button onclick="selectMode('options')" class="girl-btn text-white font-bold py-3 w-full rounded-2xl text-base flex justify-center items-center gap-2">
+                        ✨ چهار گزینه‌ای
+                    </button>
+                    <button onclick="selectMode('typing')" class="mode-btn text-white font-bold py-3 w-full rounded-2xl text-base flex justify-center items-center gap-2 shadow-lg">
+                        ✏️ نوشتن و تایپ پاسخ
+                    </button>
+                </div>
+                <button onclick="closeModeModal()" class="text-xs text-gray-400 underline mt-2 block mx-auto hover:text-gray-600">انصراف</button>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="hidden flex-col justify-between h-full flex-grow space-y-6">
+            <div class="flex justify-between items-center bg-white/70 p-3 rounded-2xl border border-pink-100">
+                <div class="text-sm text-gray-600 font-bold">سوال: <span id="question-num" class="text-[#ff477e]">1</span>/10</div>
+                <div class="w-28 bg-gray-200 rounded-full h-3 overflow-hidden relative">
+                    <div id="timer-bar" class="bg-gradient-to-r from-pink-400 to-purple-500 h-full w-full transition-all duration-1000 linear"></div>
+                </div>
+                <div class="text-sm font-bold text-purple-600">امتیاز: <span id="current-score">0</span></div>
+            </div>
+
+            <div id="question-box" class="my-auto animate__animated">
+                <div class="text-xs text-purple-400 font-bold tracking-widest uppercase mb-2"><span class="player-name"></span> جان، این چنده؟ 🤔</div>
+                <div class="text-5xl font-black text-gray-800 tracking-wide flex justify-center items-center gap-4" id="question-text">
+                    <span>۵</span> <span class="text-pink-500">×</span> <span>۴</span>
+                </div>
+            </div>
+
+            <div class="w-full mt-auto">
+                <div class="grid grid-cols-2 gap-3 hidden" id="options-container"></div>
+                
+                <div class="hidden space-y-3" id="typing-container">
+                    <input type="number" id="typing-input" pattern="[0-9]*" inputmode="numeric" placeholder="پاسخ رو اینجا بنویس..." class="w-full px-4 py-3 rounded-2xl border-2 border-purple-200 focus:border-purple-500 outline-none text-center font-bold text-2xl text-gray-700 bg-white">
+                    <button onclick="submitTypingAnswer()" class="mode-btn text-white font-bold py-3 px-6 rounded-2xl text-lg w-full shadow-md active:scale-95 transition-transform">
+                        ثبت نهایی جواب 🌟
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-screen" class="hidden space-y-6 my-auto animate__animated animate__fadeIn">
+            <div id="result-emoji" class="text-7xl animate__animated animate__tada">🎉</div>
+            <h2 class="text-2xl font-black text-purple-700" id="result-title">آفرین!</h2>
+            
+            <div class="bg-white/90 p-5 rounded-2xl border border-pink-100 space-y-3 shadow-inner">
+                <p class="text-gray-700 text-base">تعداد پاسخ‌های درست: <span id="correct-count" class="font-bold text-green-500">0</span> از 10</p>
+                <p class="text-gray-700 text-base">کل زمان آزمون: <span id="total-time-spent" class="font-bold text-purple-600">0</span> ثانیه ⏱️</p>
+                <div class="h-[1px] bg-pink-100 my-2"></div>
+                <p class="text-sm text-gray-500 leading-relaxed" id="result-feedback">تو فوق‌العاده‌ای!</p>
+            </div>
+
+            <button onclick="openModeModal()" class="girl-btn text-white font-bold py-3 px-8 rounded-full text-lg w-full">
+                دوباره بازی کنیم؟ 🔄
+            </button>
+        </div>
+
+    </div>
+
+    <script>
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function playSound(type) {
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain); gain.connect(audioCtx.destination);
+            if (type === 'success') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); 
+                osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); 
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.3);
+            } else if (type === 'fail') {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(140, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+                osc.start(); osc.stop(audioCtx.currentTime + 0.25);
+            }
+        }
+    </script>
+
+    <script>
+        let currentQuestionIndex = 0, score = 0;
+        let num1, num2, correctAnswer;
+        let questionTimer, timeLeft = 10; 
+        let totalTimerInterval, totalTimeElapsed = 0; 
+        let userName = "", gameMode = "options"; // 'options' یا 'typing'
+
+        const nameScreen = document.getElementById('name-screen');
+        const startScreen = document.getElementById('start-screen');
+        const modeModal = document.getElementById('mode-modal');
+        const quizScreen = document.getElementById('quiz-screen');
+        const resultScreen = document.getElementById('result-screen');
+        const questionText = document.getElementById('question-text');
+        const questionNum = document.getElementById('question-num');
+        const timerBar = document.getElementById('timer-bar');
+        const questionBox = document.getElementById('question-box');
+        const currentScoreEl = document.getElementById('current-score');
+        const optionsContainer = document.getElementById('options-container');
+        const typingContainer = document.getElementById('typing-container');
+        const typingInput = document.getElementById('typing-input');
+
+        window.onload = function() {
+            const savedName = localStorage.getItem('girl_math_user_name');
+            if (savedName) {
+                userName = savedName;
+                initStartScreen();
+            } else {
+                nameScreen.classList.remove('hidden');
+            }
+        }
+
+        function saveName() {
+            const input = document.getElementById('user-name-input').value.trim();
+            if (input === "") { alert("لطفاً یک اسم قشنگ برام بنویس! 🌸"); return; }
+            localStorage.setItem('girl_math_user_name', input);
+            userName = input;
+            nameScreen.classList.add('hidden');
+            initStartScreen();
+        }
+
+        function initStartScreen() {
+            document.getElementById('welcome-name').innerText = userName;
+            document.querySelectorAll('.player-name').forEach(el => el.innerText = userName);
+            startScreen.classList.remove('hidden');
+            showHighScore();
+        }
+
+        function showHighScore() {
+            const highScore = localStorage.getItem('girl_math_high_score') || 0;
+            if(highScore > 0) {
+                document.getElementById('high-score-box').classList.remove('hidden');
+                document.getElementById('high-score-val').innerText = highScore;
+            }
+        }
+
+        function openModeModal() { modeModal.classList.remove('hidden'); }
+        function closeModeModal() { modeModal.classList.add('hidden'); }
+
+        function selectMode(mode) {
+            gameMode = mode;
+            closeModeModal();
+            startQuiz();
+        }
+
+        function startQuiz() {
+            startScreen.classList.add('hidden');
+            resultScreen.classList.add('hidden');
+            quizScreen.classList.remove('hidden');
+            
+            if(gameMode === 'options') {
+                optionsContainer.classList.remove('hidden');
+                typingContainer.classList.add('hidden');
+            } else {
+                optionsContainer.classList.add('hidden');
+                typingContainer.classList.remove('hidden');
+            }
+
+            currentQuestionIndex = 0;
+            score = 0;
+            totalTimeElapsed = 0;
+            currentScoreEl.innerText = score;
+            
+            clearInterval(totalTimerInterval);
+            totalTimerInterval = setInterval(() => { totalTimeElapsed++; }, 1000);
+            
+            generateQuestion();
+        }
+
+        function generateQuestion() {
+            if (currentQuestionIndex >= 10) { endQuiz(); return; }
+
+            currentQuestionIndex++;
+            questionNum.innerText = currentQuestionIndex;
+            questionBox.classList.remove('animate__shakeX', 'animate__pulse');
+            
+            num1 = Math.floor(Math.random() * 8) + 2;
+            num2 = Math.floor(Math.random() * 8) + 2;
+            correctAnswer = num1 * num2;
+
+            questionText.innerHTML = `<span>${num1}</span> <span class="text-pink-500">×</span> <span>${num2}</span>`;
+
+            if(gameMode === 'options') {
+                // ساخت گزینه‌ها
+                let options = [correctAnswer];
+                while (options.length < 4) {
+                    let wrongAnswer = (num1 + Math.floor(Math.random() * 3) - 1) * (num2 + Math.floor(Math.random() * 3) - 1);
+                    if (wrongAnswer > 0 && !options.includes(wrongAnswer) && wrongAnswer !== correctAnswer) {
+                        options.push(wrongAnswer);
+                    } else {
+                        let randomWrong = correctAnswer + Math.floor(Math.random() * 10) - 5;
+                        if(randomWrong > 0 && randomWrong !== correctAnswer && !options.includes(randomWrong)) options.push(randomWrong);
+                    }
+                }
+                options.sort(() => Math.random() - 0.5);
+
+                optionsContainer.innerHTML = '';
+                options.forEach(option => {
+                    const btn = document.createElement('button');
+                    btn.className = "bg-white text-gray-700 font-bold py-3 px-4 rounded-2xl border-2 border-pink-100 hover:border-pink-300 text-xl shadow-sm transition-all";
+                    btn.innerText = option;
+                    btn.onclick = () => checkAnswer(option, btn);
+                    optionsContainer.appendChild(btn);
+                });
+            } else {
+                typingInput.value = '';
+                typingInput.disabled = false;
+                typingInput.focus();
+            }
+
+            startQuestionTimer();
+        }
+
+        function startQuestionTimer() {
+            clearInterval(questionTimer);
+            timeLeft = 10;
+            timerBar.style.width = '100%';
+            timerBar.className = "bg-gradient-to-r from-pink-400 to-purple-500 h-full w-full transition-all duration-1000 linear";
+
+            questionTimer = setInterval(() => {
+                timeLeft--;
+                timerBar.style.width = `${timeLeft * 10}%`;
+                if(timeLeft <= 3) {
+                    timerBar.classList.remove('from-pink-400', 'to-purple-500');
+                    timerBar.classList.add('bg-red-400');
+                }
+                if (timeLeft <= 0) {
+                    clearInterval(questionTimer);
+                    playSound('fail');
+                    questionBox.classList.add('animate__shakeX');
+                    if(gameMode === 'typing') typingInput.disabled = true;
+                    setTimeout(generateQuestion, 1500);
+                }
+            }, 1000);
+        }
+
+        // بررسی پاسخ حالت چهارگزینه‌ای
+        function checkAnswer(selected, clickedBtn) {
+            clearInterval(questionTimer);
+            const buttons = optionsContainer.querySelectorAll('button');
+            buttons.forEach(b => b.disabled = true);
+
+            if (selected === correctAnswer) {
+                score++; currentScoreEl.innerText = score;
+                clickedBtn.classList.add('bg-green-400', 'text-white', 'border-green-400');
+                handleCorrectAnswer();
+            } else {
+                clickedBtn.classList.add('bg-red-400', 'text-white', 'border-red-400', 'animate__animated', 'animate__headShake');
+                handleWrongAnswer();
+                buttons.forEach(b => {
+                    if (parseInt(b.innerText) === correctAnswer) b.classList.add('bg-green-200', 'text-green-800');
+                });
+            }
+            setTimeout(generateQuestion, 1500);
+        }
+
+        // بررسی پاسخ حالت تایپی
+        function submitTypingAnswer() {
+            const val = parseInt(typingInput.value.trim());
+            if (isNaN(val)) return;
+
+            clearInterval(questionTimer);
+            typingInput.disabled = true;
+
+            if (val === correctAnswer) {
+                score++; currentScoreEl.innerText = score;
+                typingInput.classList.add('border-green-400', 'bg-green-50');
+                handleCorrectAnswer();
+            } else {
+                typingInput.classList.add('border-red-400', 'bg-red-50', 'animate__animated', 'animate__headShake');
+                handleWrongAnswer();
+                // نمایش پاسخ صحیح به عنوان راهنمایی
+                typingInput.value = `${typingInput.value} (درست: ${correctAnswer})`;
+            }
+            setTimeout(() => {
+                typingInput.classList.remove('border-green-400', 'bg-green-50', 'border-red-400', 'bg-red-50', 'animate__animated', 'animate__headShake');
+                generateQuestion();
+            }, 1800);
+        }
+
+        // افزودن اینتر برای دکمه ثبت تایپی
+        typingInput.addEventListener("keyup", function(event) {
+            if (event.key === "Enter") { submitTypingAnswer(); }
+        });
+
+        function handleCorrectAnswer() {
+            questionBox.classList.add('animate__pulse');
+            playSound('success');
+            confetti({ particleCount: 60, spread: 50, origin: { y: 0.75 }, colors: ['#ff85a2', '#ff477e', '#f7aef8'] });
+        }
+
+        function handleWrongAnswer() {
+            questionBox.classList.add('animate__shakeX');
+            playSound('fail');
+        }
+
+        function endQuiz() {
+            clearInterval(totalTimerInterval);
+            quizScreen.classList.add('hidden');
+            resultScreen.classList.remove('hidden');
+
+            document.getElementById('correct-count').innerText = score;
+            document.getElementById('total-time-spent').innerText = totalTimeElapsed;
+
+            const emojiEl = document.getElementById('result-emoji');
+            const titleEl = document.getElementById('result-title');
+            const feedbackEl = document.getElementById('result-feedback');
+
+            if (score === 10) {
+                emojiEl.innerText = "👑🦄✨"; titleEl.innerText = `ملکه ریاضی، ${userName} جان!`;
+                feedbackEl.innerText = `فوق‌العاده بود! تو کل سوالات رو توی ${totalTimeElapsed} ثانیه ترکوندی. پرنسس فوق‌العاده سریع و باهوش من!`;
+            } else if (score >= 7) {
+                emojiEl.innerText = "🌸💖🎉"; titleEl.innerText = `عالی بود ${userName} قشنگ!`;
+                feedbackEl.innerText = `۱۰ تا سوال رو توی ${totalTimeElapsed} ثانیه پاسخ دادی. رکورد خیلی خوبی داری، آفرین دختر پرتلاش!`;
+            } else {
+                emojiEl.innerText = "💫👍🌱"; titleEl.innerText = `خسته نباشی ${userName} جان!`;
+                feedbackEl.innerText = `کل آزمون ${totalTimeElapsed} ثانیه طول کشید. مطمئنم با چند بار تمرین دیگه، سرعت و امتیازت خیلی بهتر میشه.`;
+            }
+
+            const oldHighScore = localStorage.getItem('girl_math_high_score') || 0;
+            if (score > oldHighScore) localStorage.setItem('girl_math_high_score', score);
+        }
+
+        function resetQuiz() { showHighScore(); startQuiz(); }
+    </script>
+</body>
+</html>
